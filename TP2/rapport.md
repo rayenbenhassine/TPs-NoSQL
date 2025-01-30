@@ -67,59 +67,178 @@ MongoDB et Redis sont deux bases de données NoSQL populaires mais avec des diff
 
 En résumé, **MongoDB** est plus adapté pour le stockage de données complexes et structurées, tandis que **Redis** est optimisé pour la rapidité et les cas d'utilisation nécessitant une faible latence.
 
----
-
-# 📌 Explication des requêtes MongoDB exécutées
-
-## 📌 1. Vérifier le nombre total de documents dans la collection `films`
+## 📌 **1. Vérifier le nombre de documents dans la collection**
 
 ```js
 db.films.countDocuments();
 ```
 
-**Résultat :** `278`
-
-> Cette requête compte le nombre total de films présents dans la collection `films`.
+- Compte le nombre total de documents dans la collection `films`.
 
 ---
 
-## 📌 2. Afficher un film au hasard pour voir la structure des documents
+## 📌 **2. Afficher un document pour comprendre la structure**
 
 ```js
 db.films.findOne();
 ```
 
-**Résultat :** Un document représentant un film, par exemple "Eternal Sunshine of the Spotless Mind".
-
-> Cette requête récupère **un seul document** dans la collection `films` pour comprendre sa structure.
+- Affiche un seul document de la collection `films` pour examiner sa structure.
 
 ---
 
-## 📌 3. Trouver tous les films d'action
+## 📌 **3. Liste des films d’action**
 
 ```js
 db.films.find({ genre: "Action" });
 ```
 
-**Résultat :** Une liste de films d’action comme "Kill Bill: Volume 1", "Gladiator", "Minority Report"...
-
-> Cette requête renvoie **tous les films dont le genre est "Action"**.
+- Récupère tous les films dont le `genre` est "Action".
 
 ---
 
-## 📌 4. Compter le nombre de films d’action
+## 📌 **4. Nombre de films d’action**
 
 ```js
 db.films.countDocuments({ genre: "Action" });
 ```
 
-**Résultat :** `36`
-
-> Cette requête compte le nombre de films qui appartiennent au genre "Action".
+- Compte le nombre de films appartenant au genre "Action".
 
 ---
 
-## 📌 Conclusion
+## 📌 **5. Films d’action produits en France**
 
-Ce fichier explique **chaque requête MongoDB exécutée**, les résultats obtenus et leur interprétation.
-Si des films ou acteurs spécifiques ne sont pas trouvés, cela peut être dû à **l’absence de ces données** ou **une différence de format** dans les enregistrements.
+```js
+db.films.find({ genre: "Action", pays: "France" });
+```
+
+- Sélectionne uniquement les films d’action **produits en France**.
+
+---
+
+## 📌 **6. Films d’action produits en France en 1963**
+
+```js
+db.films.find({ genre: "Action", pays: "France", annee: 1963 });
+```
+
+- Affiche les films d’action produits en France **en 1963**.
+
+---
+
+## 📌 **7. Afficher les films d’action réalisés en France sans les notes (`grades`)**
+
+```js
+db.films.find({ genre: "Action", pays: "France" }, { grades: 0 });
+```
+
+- Exclut l’attribut `grades` dans les résultats.
+
+---
+
+## 📌 **8. Afficher uniquement les titres et notes des films d’action en France**
+
+```js
+db.films.find(
+  { genre: "Action", pays: "France" },
+  { _id: 0, titre: 1, grades: 1 }
+);
+```
+
+- Affiche uniquement les **titres** et les **notes** (`grades`) des films d’action français, sans afficher `_id`.
+
+---
+
+## 📌 **9. Films d’action en France avec une note supérieure à 10**
+
+```js
+db.films.find(
+  { genre: "Action", pays: "France", notes: { $gt: 10 } },
+  { _id: 0, titre: 1, notes: 1 }
+);
+```
+
+- Sélectionne les films d’action français où **au moins une note est > 10**.
+
+---
+
+## 📌 **10. Films d’action en France avec uniquement des notes supérieures à 10**
+
+```js
+db.films.find(
+  { genre: "Action", pays: "France", notes: { $elemMatch: { $gt: 10 } } },
+  { _id: 0, titre: 1, notes: 1 }
+);
+```
+
+- Utilise `$elemMatch` pour s'assurer que **toutes** les notes sont > 10.
+
+---
+
+## 📌 **11. Afficher tous les genres de films disponibles**
+
+```js
+db.films.distinct("genre");
+```
+
+- Affiche tous les **genres distincts** présents dans la base `lesfilms`.
+
+---
+
+## 📌 **12. Afficher toutes les notes (`grades`) attribuées**
+
+```js
+db.films.distinct("grades");
+```
+
+- Récupère toutes les **notes distinctes** existantes.
+
+---
+
+## 📌 **13. Films où un des artistes suivants apparaît**
+
+```js
+db.films.find({ artistes: { $in: ["artist:4", "artist:18", "artist:11"] } });
+```
+
+- Sélectionne les films contenant **au moins un des artistes spécifiés**.
+
+---
+
+## 📌 **14. Films sans résumé (`summary`)**
+
+```js
+db.films.find({ $or: [{ summary: { $exists: false } }, { summary: "" }] });
+```
+
+- Recherche les films **sans résumé** (champ `summary` inexistant ou vide).
+
+---
+
+## 📌 **15. Films avec Leonardo DiCaprio en 1997**
+
+```js
+db.films.find({ artistes: "Leonardo DiCaprio", annee: 1997 });
+```
+
+- Sélectionne les films **avec Leonardo DiCaprio** sortis **en 1997**.
+
+---
+
+## 📌 **16. Films avec Leonardo DiCaprio OU sortis en 1997**
+
+```js
+db.films.find({ $or: [{ artistes: "Leonardo DiCaprio" }, { annee: 1997 }] });
+```
+
+- Recherche les films **joués par Leonardo DiCaprio OU sortis en 1997**.
+
+---
+
+## ✅ **Conclusion**
+
+Ce document récapitule l'ensemble des requêtes exécutées et explique leur fonction.
+Si besoin, tu peux modifier ou optimiser ces requêtes selon les besoins spécifiques.
+
+🎯 Bon travail avec MongoDB ! 🚀
