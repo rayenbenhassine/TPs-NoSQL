@@ -233,12 +233,3 @@ db.films.find({ $or: [{ artistes: "Leonardo DiCaprio" }, { annee: 1997 }] });
 ```
 
 - Recherche les films **joués par Leonardo DiCaprio OU sortis en 1997**.
-
----
-
-## ✅ **Conclusion**
-
-Ce document récapitule l'ensemble des requêtes exécutées et explique leur fonction.
-Si besoin, tu peux modifier ou optimiser ces requêtes selon les besoins spécifiques.
-
-🎯 Bon travail avec MongoDB ! 🚀
